@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> <!-- Reutilizando o arquivo de estilo -->
+    <style>
+        /* Estilos específicos para a página de reviews */
+        body {
+            background-color: #1d2636;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        header {
+            background-color: #1d1d1d;
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            text-decoration: none;
+            color: #fff;
+            margin-left: 20px;
+        }
+
+        .navegação {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navegação li {
+            margin-right: 20px;
+        }
+
+        .navegação a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navegação a:hover {
+            color: #007BFF;
+        }
+
+        /* Estilos para a página de reviews */
+        h1 {
+            margin: 50px 20px 20px 20px; /* Adicione 50px de margem superior */
+        }
+
+        .avaliacao {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .avaliacao h2 {
+            font-size: 24px;
+        }
+
+        .avaliacao .estrelas {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        .avaliacao .estrela {
+            cursor: pointer;
+            color: #ccc; /* Cor padrão das estrelas */
+        }
+
+        .avaliacao .estrela.selecionada {
+            color: #ffc107; /* Cor amarela para a estrela selecionada */
+        }
+
+        .avaliacao .avaliar {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        /* Estilos para o botão de avaliação quando hover */
+        .avaliacao .avaliar:hover {
+            background-color: #0056b3;
+        }
+
+        .comentarios {
+            margin: 20px;
+        }
+
+        .comentario {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .comentario .autor {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px; /* Aumente o tamanho da fonte do autor */
+        }
+
+        .comentario .texto {
+            font-size: 16px;
+            line-height: 1.6; /* Aumente o espaçamento entre linhas para facilitar a leitura */
+        }
+
+        /* Reutilize os estilos do carrinho-popup, notificação e modal se necessário */
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo"><i class='bx bxs-crown'></i>Alta Classe</a>
+        <ul class="navegação">
+            <li><a href="index.html">Visão geral</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="https://api.whatsapp.com/send?1=pt_BR&phone=5511915559902" target="_blank">Contate-nos</a></li>
+        </ul>
+        <div class="header-icons">
+            <!-- Inclua os ícones, carrinho, notificação e modal se necessário -->
+        </div>
+    </header>
+
+    <!-- Conteúdo da página de reviews -->
+    <h1>Reviews</h1>
+    <div class="avaliacao">
+        <h2>Avalie este produto</h2>
+        <p>O que você achou deste produto?</p>
+        <div class="estrelas">
+            <!-- Coloque aqui as 5 estrelas para avaliação -->
+            <span class="estrela" id="estrela1">&#9733;</span>
+            <span class="estrela" id="estrela2">&#9733;</span>
+            <span class="estrela" id="estrela3">&#9733;</span>
+            <span class="estrela" id="estrela4">&#9733;</span>
+            <span class="estrela" id="estrela5">&#9733;</span>
+        </div>
+        <button class="avaliar">Avaliar</button>
+    </div>
+
+    <p>ㅤㅤㅤㅤㅤAqui você pode encontrar avaliações dos nossos produtos. Confira o que os nossos clientes têm a dizer:</p>
+
+    <div class="comentarios">
+        <!-- Comentário 1 -->
+        <div class="comentario">
+            <div class="autor">João Silva</div>
+            <div class="texto">
+                Excelente produto! Estou muito satisfeito com a minha compra. A qualidade é incrível e o preço é justo.
+            </div>
+        </div>
+
+        <!-- Comentário 2 -->
+        <div class="comentario">
+            <div class="autor">Maria Oliveira</div>
+            <div class="texto">
+                Adoro os produtos desta loja. São sempre elegantes e da mais alta qualidade. Recomendo a todos!
+            </div>
+        </div>
+
+        <!-- Adicione mais comentários aqui conforme necessário -->
+    </div>
+
+    <!-- Reutilize o rodapé, carrinho-popup, notificação e modal se necessário -->
+
+    <script>
+        // Função para manipular a seleção de estrelas
+        const estrelas = document.querySelectorAll('.estrela');
+        let avaliacao = 0;
+
+        estrelas.forEach((estrela, index) => {
+            estrela.addEventListener('click', () => {
+                avaliacao = index + 1;
+
+                // Preenche todas as estrelas até a estrela selecionada
+                for (let i = 0; i <= index; i++) {
+                    estrelas[i].classList.add('selecionada');
+                }
+
+                // Remove o preenchimento das estrelas não selecionadas
+                for (let i = index + 1; i < estrelas.length; i++) {
+                    estrelas[i].classList.remove('selecionada');
+                }
+            });
+        });
+
+        // Função para lidar com o clique no botão de avaliação
+        const avaliarBotao = document.querySelector('.avaliar');
+
+        avaliarBotao.addEventListener('click', () => {
+            if (avaliacao === 0) {
+                alert('Por favor, selecione uma avaliação antes de clicar em Avaliar.');
+            } else {
+                alert(`Você avaliou o produto com ${avaliacao} estrela(s).`);
+                // Aqui você pode adicionar a lógica para enviar a avaliação para o servidor, se desejar.
+            }
+        });
+    </script>
+</body>
+</html>

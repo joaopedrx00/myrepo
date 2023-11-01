@@ -1,0 +1,42 @@
+<script src="https://js.stripe.com/v3/"></script>
+<form id="payment-form">
+    <input type="text" id="card-number" placeholder="Número do Cartão">
+    <input type="text" id="card-expiry" placeholder="Data de Validade (MM/AA)">
+    <input type="text" id="card-cvc" placeholder="Código CVV">
+    <input type="hidden" id="stripe-key" value="pk_live_51NtygbLNhjeC9Oh5hg6wrKiHOShKJZiGxFSEbcFMF5hX6G8NUy154H7HuAv0CYoBaoAnFTTyiL1gqpkIdo8gFLds00QtOT8SCj">
+    <button type="submit">Pagar</button>
+  </form>
+  <script>
+    var stripe = Stripe('SUA_CHAVE_PUBLICA_DO_STRIPE');
+    var elements = stripe.elements();
+    
+    var card = elements.create('card');
+    card.mount('#card-element');
+    
+    var form = document.getElementById('payment-form');
+    
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          console.error(result.error);
+        } else {
+          // Envie o token de pagamento para o seu servidor
+          var token = result.token;
+          // Faça o que for necessário com o token, como enviar para o seu servidor
+          console.log(token);
+        }
+      });
+    });
+    function obterValorDoProdutoDaURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const preco = urlParams.get('preco');
+        return preco;
+    }
+
+    // Exemplo de uso: obtenha o valor do produto
+    const valorDoProduto = obterValorDoProdutoDaURL();
+    console.log('Valor do produto em centavos:', valorDoProduto);
+  </script>
+    
