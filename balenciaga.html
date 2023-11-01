@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos comuns para todos os tamanhos de tela */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1d2636;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        header {
+            background: #1d1d1d;
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .navegação {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navegação li {
+            margin-right: 20px;
+        }
+
+        .navegação a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navegação a:hover {
+            color: #007BFF;
+        }
+
+        .notificacao {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            animation: slideIn 0.5s, slideOut 0.5s 5s forwards;
+            display: none;
+        }
+
+        .produto-box {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px;
+            width: calc(33.33% - 20px);
+            float: left;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 550px;
+        }
+
+        .produto-box img {
+            max-width: 100%;
+            height: auto;
+            margin: -10px auto 10px auto;
+        }
+
+        .produto-box:hover {
+            border: 2px solid #007BFF;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .descricao-produto {
+            font-size: 14px;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .preco {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .produto-box .ver-produto {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .produto-box .ver-produto:hover {
+            background: #0056b3;
+        }
+
+        .produto {
+            display: none;
+        }
+
+        .produto.ativo {
+            display: block;
+        }
+
+        .produto-chanel-2 {
+            text-align: center;
+        }
+
+        .separador-marca {
+            margin-top: 40px;
+        }
+
+        .marcas-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .marca-btn {
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            white-space: nowrap;
+            margin: 10px;
+        }
+
+        .marca-btn.active {
+            background: #007BFF;
+            color: #fff;
+        }
+
+        .marca-btn:not(.active) {
+            background: #333;
+            color: #fff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Estilos para telas menores que 768px */
+        @media (max-width: 768px) {
+            header {
+                padding: 5px 0;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .navegação {
+                display: none;
+            }
+
+            .header-icons {
+                display: flex;
+            }
+        }
+
+        /* Estilos específicos para telas menores que 768px */
+        @media (max-width: 768px) {
+            .produto-box {
+                width: 100%;
+                float: none;
+            }
+        }
+        .produto .gucci-imagem:not(:first-child) {
+    display: none;
+}
+
+/* Exiba a primeira imagem em cada produto */
+.produto .gucci-imagem:first-child {
+    display: block;
+}
+    </style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const produtos = document.querySelectorAll(".produto");
+    const marcaBotoes = document.querySelectorAll(".marca-btn");
+
+    function mostrarPrimeiraImagem(produto) {
+        const imagensAtivas = produto.querySelectorAll(".gucci-imagem");
+        if (imagensAtivas.length > 0) {
+            imagensAtivas[0].style.display = "block";
+        }
+    }
+
+    produtos.forEach(mostrarPrimeiraImagem);
+
+    function mostrarImagemAtual(produtoAtivo, direcao, identificador) {
+        const imagensAtivas = produtoAtivo.querySelectorAll(`.gucci-imagem-${identificador}`);
+        const imagemAtual = Array.from(imagensAtivas).findIndex(img => img.style.display !== "none");
+
+        imagensAtivas.forEach(img => (img.style.display = "none"));
+
+        let proximoIndice = (imagemAtual + direcao) % imagensAtivas.length;
+        if (proximoIndice < 0) {
+            proximoIndice = imagensAtivas.length - 1;
+        }
+
+        imagensAtivas[proximoIndice].style.display = "block";
+    }
+
+    produtos.forEach(function (produto) {
+        const setasNavegacao = produto.querySelectorAll(".seta-navegacao");
+        setasNavegacao.forEach(function (seta) {
+            seta.addEventListener("click", function () {
+                const direcao = seta.classList.contains("seta-direita") ? 1 : -1;
+                const produtoAtivo = seta.closest(".produto");
+                const identificador = produtoAtivo.getAttribute("data-identificador");
+                mostrarImagemAtual(produtoAtivo, direcao, identificador);
+            });
+        });
+    });
+
+    marcaBotoes.forEach(botao => {
+        botao.addEventListener("click", function () {
+            const marcaSelecionada = botao.getAttribute("data-marca");
+            marcaBotoes.forEach(b => b.classList.remove("active"));
+            botao.classList.add("active");
+
+            produtos.forEach(produto => {
+                const marcaProduto = produto.getAttribute("data-marca");
+                if (marcaProduto === marcaSelecionada) {
+                    produto.classList.add("ativo");
+                    mostrarPrimeiraImagem(produto);
+                } else {
+                    produto.classList.remove("ativo");
+                    // Resetar para a primeira imagem ao mudar de marca
+                    const imagensAtivas = produto.querySelectorAll(".gucci-imagem");
+                    imagensAtivas.forEach(img => (img.style.display = "none"));
+                    mostrarPrimeiraImagem(produto);
+                }
+                
+            });
+        });
+    });
+    const imagensProduto = document.querySelectorAll(".produto-box img");
+
+// Modal e conteúdo do modal
+const modal = document.querySelector(".modal");
+const modalContent = modal.querySelector(".modal-content");
+const closeModal = modal.querySelector(".close-modal");
+
+// Função para abrir o modal e exibir a imagem clicada
+function abrirModal(imagemSrc) {
+    modalContent.innerHTML = `<img class="modal-img" src="${imagemSrc}" alt="Imagem do Produto">`;
+    modal.style.display = "block";
+}
+
+// Evento de clique para cada imagem do produto
+imagensProduto.forEach(function (imagem) {
+    imagem.addEventListener("click", function () {
+        abrirModal(imagem.src);
+    });
+});
+
+// Evento de clique para fechar o modal
+closeModal.addEventListener("click", function () {
+    modal.style.display = "none";
+});
+
+// Função para fechar o modal quando o usuário clicar fora da imagem
+window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+});
+</script>
+    </head>
+    <body>
+        <header>
+            <a href="#" class="logo"><i class='bx bxs-crown'></i>Alta Classe</a>
+            <ul class="navegação">
+                <li><a href="index.html">Visão geral</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="https://api.whatsapp.com/send?1=pt_BR&phone=5511915559902" target="_blank">Contate-nos</a></li>
+            </ul>
+            <div class="header-icons">
+                </div>
+            </div>
+        </header>
+                </ul>
+            </div>
+        </div>
+        <div class="notificacao">
+            <i class='bx bx-error'></i> Os preços dos produtos tiveram um aumento por conta da nova lei de importação.
+        </div>
+        <div class="modal">
+            <span class="close-modal">×</span>
+            <div class="modal-content">
+                <img class="modal-img" src="" alt="Imagem do Produto">
+            </div>
+        </div>
+        <h1>Nossos Produtos</h1>
+        <div class="marcas-container">
+            <a href="index.html" class="marca-btn" data-marca="chanel">Chanel</a>
+            <a href="gucci.html" class="marca-btn" data-marca="gucci">Gucci</a>
+            <a href="saint-laurent.html" class="marca-btn" data-marca="saint-laurent">Saint Laurent</a>
+            <a href="LV.html" class="marca-btn" data-marca="lv">Louis Vuitton</a>
+            <a href="prada.html" class="marca-btn" data-marca="prada">Prada</a>
+            <a href="mk.html" class="marca-btn" data-marca="mk">Michael Kors</a>
+            <a href="balenciaga.html" class="marca-btn active" data-marca="balenciaga">Balenciaga</a>
+            <p>Se interessou por algum produto? Deseja comprar? <a href="https://wa.me/5511915559902/?text=Olá, gostaria de comprar o produto de hashtag X, da marca X" target="_blank">Clique aqui</a></p>
+        </div>
+        <div class="produto ativo" data-marca="lv" data-identificador="3">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="678def97-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-3">
+                <img src="8f211050-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-3">
+                <img src="e0bb69b1-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-3">
+                <h2>#1</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="lv" data-identificador="4">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="da3df7d4-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-4">
+                <img src="a91fd665-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-4">
+                <img src="ae33dfad-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-4">
+                <h2>#2</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="lv" data-identificador="11">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                <img src="1b06f4ee-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                <img src="749a9601-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                <img src="8fce991c-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                <img src="e94f7c5b-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                <h2>#3</h2>   
+            </div>      
+            <div class="produto ativo" data-marca="chanel" data-identificador="15">
+                <div class="produto-box">
+                    <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                    <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                    <img src="70bc8887-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-15">
+                    <img src="ac728601-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-15">
+                    <img src="d12782fa-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-15">
+                    <h2>#4</h2>   
+                </div>
+            </div>
+            <div class="produto ativo" data-marca="chanel" data-identificador="20">
+                <div class="produto-box">
+                    <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                    <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                    <img src="a0549b0c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-20">
+                    <img src="0bf0400c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-20">
+                    <img src="ac35bad3-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-20">
+                    <h2>#5</h2> 
+                </div>
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="21">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="083430af-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-21">
+                <img src="25565d76-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-21">
+                <img src="2ba8e4b3-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-21">
+                <h2>#6</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="22">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="273dded9-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <img src="d262cd84-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <img src="cc818d75-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <h2>#7</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="22">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="1bf8303b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <img src="18b1f765-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <img src="78800a00-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-22">
+                <h2>#8</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="23">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="28f721cf-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-23">
+                <img src="73904785-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-23">
+                <img src="793c9a57-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-23">
+                <h2>#9</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="24">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="8e8ebe8c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-24">
+                <img src="c81c036f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-24">
+                <img src="320c8bbd-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-24">
+                <h2>#10</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="25">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="e646626e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-25">
+                <img src="a0c13b88-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-25">
+                <img src="a5a3325c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-25">
+                <h2>#11</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="26">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="582935b0-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-26">
+                <img src="142f2902-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-26">
+                <img src="ec654014-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-26">
+                <h2>#12</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="27">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="5fff6917-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <img src="8f311ff3-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <img src="8e0d2a93-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <h2>#13</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="27">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>                
+                <img src="43330860-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <img src="5d3ab87c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <img src="e4ab3e4a-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-27">
+                <h2>#14</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="28">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+                <img src="0e0103ae-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-28">              
+                <img src="c5d65ba0-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-28">
+                <img src="5528d96b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-28">
+                <h2>#15</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="29">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+                <img src="a112ef0c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-29">
+                <img src="d37f0a2c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-29">              
+                <img src="cae99f6d-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-29">
+               
+                <h2>#16</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="30">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+                <img src="43f2a891-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-30">              
+                <img src="ca1653c1-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-30">
+                <img src="5c1caa8f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-30">
+               
+                <h2>#17</h2> 
+            </div>
+        </div>
+        <div class="produto ativo" data-marca="chanel" data-identificador="31">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+                <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+                <img src="f0d7b950-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-31">              
+                <img src="bf4f600e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-31">
+                <img src="feea9a94-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-31">
+               
+                <h2>#18</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="32">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="66428d39-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-32">              
+        <img src="3cd8fe26-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-32">
+        <img src="3b2a3585-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-32">
+       
+        <h2>#19</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="33">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="aedc8e7f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-33">              
+        <img src="e8d58714-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-33">
+       
+        <h2>#20</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="34">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="cf4a404a-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-34">
+        <img src="164e237d-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-34">
+        <img src="10072f0e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-34">
+       
+        <h2>#21</h2> 
+    </div>
+</div>      
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="35">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="eaf36a01-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-35">              
+        <img src="2f98e328-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-35">
+        <img src="aeaf8ac5-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-35">
+       
+        <h2>#22</h2> 
+    </div>
+</div>    
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="36">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="621e4e92-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-36">              
+        <img src="01f0cb8f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-36">
+        <img src="acca1b5d-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-36">
+       
+        <h2>#23</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="37">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="9fd2fb86-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-37">              
+        <img src="f5320758-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-37">
+        <img src="9a07bc98-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-37">
+       
+        <h2>#24</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="38">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="5bf27375-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-38">              
+        <img src="596ee30e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-38">
+        <img src="a822a516-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-38">
+       
+        <h2>#25</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="39">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="9fe229b6-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-39">              
+        <img src="3e5b1316-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-39">
+        <img src="742f6c26-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-39">
+       
+        <h2>#26</h2> 
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="41">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="e573abdd-PhotoRoom-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-41">              
+        <img src="393b26bd-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-41">
+        <img src="4c7d4e1a-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-41">
+       
+        <h2>#27</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="42">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="c51ab8ca-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-42">              
+        <img src="eb19379d-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-42">
+        <img src="17495e45-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-42">
+       
+        <h2>#28</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="43">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="4d5908be-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-43">              
+        <img src="eca3f390-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-43">
+        <img src="6b365cae-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-43">
+       
+        <h2>#29</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="44">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="5917a664-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-44">              
+        <img src="95976a3e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-44">
+        <img src="c48f0962-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-44">
+       
+        <h2>#30</h2> 
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="90">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="65ea3b32-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-90">              
+        <img src="634e55cc-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-90">
+        <img src="ef0b5e72-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-90"> 
+        <h2>#31</h2>    
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="70">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="1a929350-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-70">              
+        <img src="4a00708e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-70">
+        <img src="67dd0c55-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-70">
+       
+        <h2>#32</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="46">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="2ae11e8e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-46">              
+        <img src="df68d00b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-46">
+        <img src="12877f3b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-46">
+       
+        <h2>#33</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="47">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="440dd15e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-47">              
+        <img src="0aba79da-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-47">
+        <img src="85f68fdd-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-47">
+       
+        <h2>#34</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="335dda1f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="9ef80370-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="189d5ff9-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#35</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="49">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="50bbf458-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-49">              
+        <img src="cf03b4d7-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-49">
+        <img src="ef78371e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-49">
+       
+        <h2>#36</h2> 
+    </div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="50">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="4f0384d7-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-50">              
+        <img src="c70e6658-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-50">
+        <img src="02ebf6bc-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-50">
+       
+        <h2>#37</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="51">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="e5450376-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-51">              
+        <img src="e35b03d4-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-51">
+        <img src="b5937eaf-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-51">
+       
+        <h2>#38</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="52">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="916e1ac4-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-52">              
+        <img src="ae40af24-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-52">
+        <img src="7f07dd95-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-52">
+       
+        <h2>#39</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="53">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="cfb22a79-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-53">              
+        <img src="82c3a6b2-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-53">
+        <img src="f43998aa-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-53">
+       
+        <h2>#40</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="54">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="d0bc5d70-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-54">              
+        <img src="7ccfe570-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-54">
+        <img src="c8c4179a-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-54">
+       
+        <h2>#41</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="55">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="8d2fe00c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-55">              
+        <img src="de6ff593-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-55">
+        <img src="246ce215-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-55">
+       
+        <h2>#42</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="56">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="66d2d69b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-56">              
+        <img src="797890e8-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-56">
+        <img src="97919843-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-56">
+       
+        <h2>#43</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="57">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="b6f244f6-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-57">              
+        <img src="ef5fa75f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-57">
+        <img src="9066333d-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-57">
+       
+        <h2>#44</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="b2a055ac-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="e1850cd3-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="c66f6f37-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#45</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="f49b42d8-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="a71aaa77-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="6d4f6b53-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#46</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="709ea50c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="85273b98-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="4de5a7a7-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#47</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="ec5f57b0-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="b72bab2e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="caf0742f-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#48<h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="4568aac4-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="e8f42fd2-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="70d430b9-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#49</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="ef41750b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="d44a89b6-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="cff22952-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#50</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="2335577b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="5db0bd41-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="b70fa49f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#51</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="c9ded14f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="bb5059e7-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="53770d01-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#51</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="89907efe-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="68fc3504-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="ba4f95b2-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#52</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="8b665e72-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="6da63b8f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="0ecc1058-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#53</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="2f82f576-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="22333215-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="14f90518-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#54</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="e71e116f-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="48a154fc-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="44d0ca0c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#55</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="4a172d58-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="7e65c706-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="a6ee20da-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#56</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="3002d7bb-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="9cfec281-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="aa8dde91-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#57</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="de2f37b4-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="131dfce8-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="40153f8e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#58</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="b76ecf1b-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="c343270e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="df5e1d76-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2></h2> #59
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="fca832a2-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="e314358e-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="4634afb7-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#60</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="9ed4c76a-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="278ba461-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="6ad70ab6-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#61</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="357cc954-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="e5c8c374-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="1b886d5c-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#62</h2> 
+    </div>
+</div>
+</div>
+</div>
+<div class="produto ativo" data-marca="chanel" data-identificador="48">
+    <div class="produto-box">
+        <div class="seta-navegacao seta-esquerda" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), -1, '3')">&#9664;</div>
+        <div class="seta-navegacao seta-direita" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;" onclick="mostrarImagemAtual(this.closest('.produto'), 1, '3')">&#9654;</div>  
+        <img src="84549061-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">              
+        <img src="c52cf80e-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 1" style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+        <img src="aa811919-PhotoRoom.png-PhotoRoom.png" alt="Produto Chanel 2." style="margin: 0 auto;"class="gucci-imagem gucci-imagem-48">
+       
+        <h2>#63</h2> 
+    </div>
+</div>
+
+            <div class="produto" data-marca="chanel">
+            </div>
+        </div>
+        <div class="produto" data-marca="gucci" data-identificador="1">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                <img src="" alt="Produto Gucci 1" class="gucci-imagem gucci-imagem-1" style="height:300px;">
+                <img src="0573314f-PhotoRoom.png-PhotoRoom.png" alt="Imagem Gucci 2" class="gucci-imagem gucci-imagem-1" style="height:300px;">
+                <img src="215fd89b-PhotoRoom.png-PhotoRoom.png" alt="Imagem Gucci 3" class="gucci-imagem gucci-imagem-1" style="height:300px;">                
+                <h2>Bolsa Dionysus</h2>
+            </div>
+            <div class="produto" data-marca="gucci" data-identificador="2">
+                <div class="produto-box">
+                    <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                    <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                    <img src="9f318e8b-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-2">
+                    <img src="d7817084-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-2">
+                    <img src="74e6c450-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 2" class="gucci-imagem gucci-imagem-2">
+                    <h2>Bolsa tiracolo GG Marmont</h2>
+                </div>
+            </div>
+            <div class="produto" data-marca="gucci" data-identificador="4">
+                <div class="produto-box">
+                    <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                    <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                    <img src="0ffe82cf-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-4">
+                    <img src="96a2593d-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-4">
+                    <img src="582f46df-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 2" class="gucci-imagem gucci-imagem-4">
+                    <h2>Bolsa Aphrodite small</h2>
+                </div>
+                <div class="produto" data-marca="gucci" data-identificador="5">
+                    <div class="produto-box">
+                        <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                        <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                        <img src="20b728d6-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-5">
+                        <img src="4d42aff2-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-5">
+                        <h2>Bolsa tiracolo Dionysus</h2>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="6">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="34d64b1b-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-6">
+                            <img src="ce7e29a1-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-6">
+                            <img src="7a28632f-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-6">
+                            <h2>Bolsa tote de couro matelassê</h2>   
+                        </div>
+                        <div class="produto" data-marca="gucci" data-identificador="7">
+                            <div class="produto-box">
+                                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                                <img src="e4112efd-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-7">
+                                <img src="80964688-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-7">
+                                <h2>Bolsa tiracolo GG Marmont</h2>
+                            </div>
+                        </div>
+                        <div class="produto" data-marca="gucci" data-identificador="4">
+                            <div class="produto-box">
+                                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                                <img src="0ffe82cf-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-4">
+                                <img src="96a2593d-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-4">
+                                <img src="582f46df-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 2" class="gucci-imagem gucci-imagem-4">
+                                <h2>Bolsa Aphrodite small</h2>
+                            </div>
+                            <div class="produto" data-marca="gucci" data-identificador="5">
+                                <div class="produto-box">
+                                    <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                                    <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                                    <img src="20b728d6-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-5">
+                                    <img src="4d42aff2-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-5">
+                                    <h2>Bolsa tiracolo Dionysus</h2>
+                                </div>
+                                <div class="produto" data-marca="gucci" data-identificador="6">
+                                    <div class="produto-box">
+                                        <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                                        <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                                        <img src="34d64b1b-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-6">
+                                        <img src="ce7e29a1-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-6">
+                                        <img src="7a28632f-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-6">
+                                        <h2>Bolsa tote de couro matelassê</h2>   
+                                        <p class="preco">Preço: R$ 1100</p>
+                                        <a href="index.html" class="ver-produto">Comprar</a>
+                                    </div>
+                                    <div class="produto" data-marca="gucci" data-identificador="7">
+                                        <div class="produto-box">
+                                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                                            <img src="e4112efd-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-7">
+                                            <img src="80964688-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-7">
+                                            <h2>Bolsa Tiracolo GG Marmont</h2>   
+                                            <p class="preco">Preço: R$ 1100</p>
+                                            <a href="index.html" class="ver-produto">Comprar</a>
+                                        </div>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="8">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="720ddee8-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-8">
+                            <img src="60a09f72-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-8">
+                            <h2>Bolsa Tiracolo GG</h2>   
+                            <p class="preco">Preço: R$ 1100</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="9">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="c9b3015e-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-9">
+                            <img src="a5cd55ba-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-9">
+                            <img src="aeec0995-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci 1" class="gucci-imagem gucci-imagem-9">
+                            <h2>Bolsa de ombro Aphrodite</h2>   
+                            <p class="preco">Preço: R$ 1100</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="10">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="3657f045-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-10">
+                            <img src="e407b668-PhotoRoom-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-10">
+                            <h2>Bolsa Gucci Ophidia</h2>   
+                            <p class="preco">Preço: R$ 1100</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="11">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="cef9159e-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                            <img src="84837159-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                            <h2>Bolsa Bucket</h2>   
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="gucci" data-identificador="11">
+                        <div class="produto-box">
+                            <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                            <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                            <img src="82110d83-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                            <img src="bbf346d2-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                            <img src="dd9268c1-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-11">
+                            <h2>Bolsa Gucci Ophidia</h2>   
+                        </div>
+        </div>
+        <div class="produto" data-marca="gucci" data-identificador="12">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                <img src="eebeaf9c-PhotoRoom-PhotoRoom-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-12">
+                <img src="9181af6c-PhotoRoom-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-12">
+                <img src="37fcfb17-PhotoRoom-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-12">
+                <h2></h2>   
+            </div>
+        </div>
+        <div class="produto" data-marca="gucci" data-identificador="13">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                <img src="a99e474b-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-13">
+                <img src="822dce55-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-13">
+                <img src="8ea9dee5-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-13">
+                <h2></h2>   
+            </div>
+        </div>
+        <div class="produto" data-marca="gucci" data-identificador="14">
+            <div class="produto-box">
+                <div class="seta-navegacao seta-esquerda" onclick="navegarProduto('gucci', 'anterior')" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;">&#9664;</div>
+                <div class="seta-navegacao seta-direita" onclick="navegarProduto('gucci', 'proxima')" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">&#9654;</div>
+                <img src="c0c4312e-PhotoRoom.png-PhotoRoom.png" alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-14">
+                <img src="5f7360c5-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-14">
+                <img src="bb6de5b8-PhotoRoom.png-PhotoRoom.png"alt="Novo Produto Gucci" class="gucci-imagem gucci-imagem-14">
+                <h2></h2>   
+            </div>
+</div></div>
+                    </div>    
+                    <div class="produto" data-marca="saint-laurent" data-indentificador="17">
+                        <div class="produto-box">
+                            <img src="28314a0b-PhotoRoom.png-PhotoRoom.png" alt="Produto Yves Saint Laurent 1"  class="gucci-imagem gucci-imagem-17">
+                            <img src="e4077ff4-PhotoRoom.png-PhotoRoom.png" alt="Produto Yves Saint Laurent 1"  class="gucci-imagem gucci-imagem-17">
+                            <img src="0322ca82-PhotoRoom.png-PhotoRoom.png" alt="Produto Yves Saint Laurent 1"  class="gucci-imagem gucci-imagem-17">
+                            <h2>Produto 1 (Yves Saint Laurent)</h2>
+                            <p class="descricao-produto">Descrição do Produto Yves Saint Laurent 1.</p>
+                            <p class="preco">Preço: R$ XXX,XX</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="produto" data-marca="valentino">    
+                        <div class="produto-box">
+                            <img src="imagem_valentino.jpg" alt="Produto Valentino 1">
+                            <h2>Produto 1 (Valentino)</h2>
+                            <p class="descricao-produto">Descrição do Produto Valentino 1.</p>
+                            <p class="preco">Preço: R$ XXX,XX</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="balenciaga">
+                        <div class="produto-box">
+                            <img src="imagem_balenciaga.jpg" alt="Produto Balenciaga 1">
+                            <h2>Produto 1 (Balenciaga)</h2>
+                            <p class="descricao-produto">Descrição do Produto Balenciaga 1.</p>
+                            <p class="preco">Preço: R$ XXX,XX</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="michael-kors">
+                        <div class="produto-box">
+                            <img src="imagem_michael_kors.jpg" alt="Produto Michael Kors 1">
+                            <h2>Produto 1 (Michael Kors)</h2>
+                            <p class="descricao-produto">Descrição do Produto Michael Kors 1.</p>
+                            <p class="preco">Preço: R$ XXX,XX</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="produto" data-marca="prada">
+                        <div class="produto-box">
+                            <img src="imagem_prada.jpg" alt="Produto Prada 1">
+                            <h2>Produto 1 (Prada)</h2>
+                            <p class="descricao-produto">Descrição do Produto Prada 1.</p>
+                            <p class="preco">Preço: R$ XXX,XX</p>
+                            <a href="index.html" class="ver-produto">Comprar</a>
+                        </div>
+                    </div>                                
+                    <!-- Adicione mais produtos para Chanel, Gucci, Saint Laurent, Michael Kors, Prada, Balenciaga, Valentino, etc., conforme necessário -->
+                    <script>  
